@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        h1 {
+            color: #333;
+        }
+        .question-box {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            text-align: left;
+        }
+        h2 {
+            text-align: center;
+            color: #555;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #feedback {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Grammar Quiz</h1>
+        
+        <div class="question-box" id="present-simple-box">
+            <h2>Present Simple</h2>
+            <p id="present-simple-question">Question will appear here</p>
+            <input type="text" id="present-simple-answer" placeholder="Type your answer here">
+            <button onclick="validateAnswer('Present Simple')">Validate</button>
+            <p id="present-simple-feedback"></p>
+        </div>
+
+        <div class="question-box" id="present-continuous-box">
+            <h2>Present Continuous</h2>
+            <p id="present-continuous-question">Question will appear here</p>
+            <input type="text" id="present-continuous-answer" placeholder="Type your answer here">
+            <button onclick="validateAnswer('Present Continuous')">Validate</button>
+            <p id="present-continuous-feedback"></p>
+        </div>
+
+        <div class="question-box" id="past-simple-box">
+            <h2>Past Simple</h2>
+            <p id="past-simple-question">Question will appear here</p>
+            <input type="text" id="past-simple-answer" placeholder="Type your answer here">
+            <button onclick="validateAnswer('Past Simple')">Validate</button>
+            <p id="past-simple-feedback"></p>
+        </div>
+    </div>
+
+    <script>
+const questions = {
+    "Present Simple": [
+        { ro: "Eu nu merg la școală.", en: "I do not go to school." },
+        { ro: "Tu nu scrii o scrisoare.", en: "You do not write a letter." },
+        { ro: "El nu citește o carte.", en: "He does not read a book." },
+        { ro: "Noi nu mâncăm mere.", en: "We do not eat apples." },
+        { ro: "Ei nu joacă fotbal.", en: "They do not play football." },
+        { ro: "Maria nu cântă frumos.", en: "Maria does not sing beautifully." },
+        { ro: "Voi nu învățați pentru test.", en: "You do not learn for the test." },
+        { ro: "Eu nu beau apă.", en: "I do not drink water." },
+        { ro: "Tu nu conduci o mașină.", en: "You do not drive a car." },
+        { ro: "El nu studiază engleza.", en: "He does not study English." },
+        { ro: "Noi nu lucrăm împreună.", en: "We do not work together." },
+        { ro: "Ei nu vizitează muzeul.", en: "They do not visit the museum." },
+        { ro: "Maria nu gătește cina.", en: "Maria does not cook dinner." },
+        { ro: "Eu nu vorbesc la telefon.", en: "I do not speak on the phone." },
+        { ro: "Tu nu înțelegi lecția.", en: "You do not understand the lesson." },
+        { ro: "El nu dansează bine.", en: "He does not dance well." },
+        { ro: "Noi nu desenăm animale.", en: "We do not draw animals." },
+        { ro: "Ei nu construiesc o casă.", en: "They do not build a house." },
+        { ro: "Maria nu face sport.", en: "Maria does not do sports." },
+        { ro: "Eu nu ascult muzică.", en: "I do not listen to music." },
+        { ro: "Tu nu repari bicicleta.", en: "You do not repair the bike." },
+        { ro: "El nu pictează un tablou.", en: "He does not paint a picture." },
+        { ro: "Noi nu alergăm dimineața.", en: "We do not run in the morning." },
+        { ro: "Ei nu se joacă în curte.", en: "They do not play in the yard." },
+        { ro: "Maria nu citește știrile.", en: "Maria does not read the news." },
+    ],
+    "Present Continuous": [
+        { ro: "Eu nu scriu un email acum.", en: "I am not writing an email now." },
+        { ro: "El nu citește o carte acum.", en: "He is not reading a book now." },
+        { ro: "Noi nu ascultăm muzică acum.", en: "We are not listening to music now." },
+        { ro: "Ei nu dansează acum.", en: "They are not dancing now." },
+        { ro: "Maria nu învață engleză acum.", en: "Maria is not learning English now." },
+        { ro: "Eu nu beau cafea acum.", en: "I am not drinking coffee now." },
+        { ro: "Tu nu conduci acum.", en: "You are not driving now." },
+        { ro: "Noi nu lucrăm la un proiect acum.", en: "We are not working on a project now." },
+        { ro: "Ei nu joacă șah acum.", en: "They are not playing chess now." },
+        { ro: "Maria nu gătește prânzul acum.", en: "Maria is not cooking lunch now." },
+        { ro: "Eu nu mă uit la televizor acum.", en: "I am not watching TV now." },
+        { ro: "Tu nu alergi în parc acum.", en: "You are not running in the park now." },
+        { ro: "El nu repară mașina acum.", en: "He is not repairing the car now." },
+        { ro: "Noi nu desenăm o hartă acum.", en: "We are not drawing a map now." },
+        { ro: "Ei nu citesc ziarele acum.", en: "They are not reading the newspapers now." },
+        { ro: "Maria nu cântă la pian acum.", en: "Maria is not playing the piano now." },
+        { ro: "Eu nu scriu o poveste acum.", en: "I am not writing a story now." },
+        { ro: "Tu nu studiezi pentru examen acum.", en: "You are not studying for the exam now." },
+        { ro: "El nu plantează flori acum.", en: "He is not planting flowers now." },
+        { ro: "Noi nu vizităm muzeul acum.", en: "We are not visiting the museum now." },
+        { ro: "Ei nu pictează un tablou acum.", en: "They are not painting a picture now." },
+        { ro: "Maria nu închiriază o mașină acum.", en: "Maria is not renting a car now." },
+        { ro: "Eu nu privesc cerul acum.", en: "I am not looking at the sky now." },
+        { ro: "Tu nu asculți muzică clasică acum.", en: "You are not listening to classical music now." },
+        { ro: "El nu pregătește bagajul acum.", en: "He is not packing the luggage now." },
+    ],
+    "Past Simple": [
+        { ro: "Eu nu am mâncat o pizza.", en: "I did not eat a pizza." },
+        { ro: "El nu a mers la școală.", en: "He did not go to school." },
+        { ro: "Noi nu am jucat fotbal.", en: "We did not play football." },
+        { ro: "Maria nu a scris un email.", en: "Maria did not write an email." },
+        { ro: "Ei nu au dansat la petrecere.", en: "They did not dance at the party." },
+        { ro: "Eu nu am ascultat muzică.", en: "I did not listen to music." },
+        { ro: "Tu nu ai cântat frumos.", en: "You did not sing beautifully." },
+        { ro: "Noi nu am privit un film.", en: "We did not watch a movie." },
+        { ro: "Ei nu au citit o carte.", en: "They did not read a book." },
+        { ro: "Am nu am studiat pentru test.", en: "I did not study for the test." },
+        { ro: "El nu a cumpărat o bicicletă.", en: "He did not buy a bike." },
+        { ro: "Maria nu a desenat un tablou.", en: "Maria did not paint a picture." },
+        { ro: "Noi nu am vizitat muzeul.", en: "We did not visit the museum." },
+        { ro: "Ei nu au dormit mult.", en: "They did not sleep a lot." },
+        { ro: "Tu nu ai condus mașina.", en: "You did not drive the car." },
+        { ro: "Eu nu am pierdut cheile.", en: "I did not lose the keys." },
+        { ro: "El nu a învățat o lecție nouă.", en: "He did not learn a new lesson." },
+        { ro: "Noi nu am vorbit cu profesorul.", en: "We did not talk to the teacher." },
+        { ro: "Ei nu au alergat în parc.", en: "They did not run in the park." },
+        { ro: "Eu nu am spălat vasele.", en: "I did not wash the dishes." },
+        { ro: "Maria nu a închis ușa.", en: "Maria did not close the door." },
+        { ro: "El nu a deschis o carte.", en: "He did not open a book." },
+        { ro: "Noi nu am urcat pe munte.", en: "We did not climb the mountain." },
+        { ro: "Ei nu au început jocul.", en: "They did not start the game." },
+        { ro: "Am nu am terminat tema.", en: "I did not finish the homework." },
+    ]
+};
+
+
+        const currentIndex = {
+            "Present Simple": 0,
+            "Present Continuous": 0,
+            "Past Simple": 0,
+        };
+
+        function showQuestion(category) {
+            const question = questions[category][currentIndex[category]];
+            document.getElementById(`${category.toLowerCase().replace(" ", "-")}-question`).textContent = question.ro;
+            document.getElementById(`${category.toLowerCase().replace(" ", "-")}-answer`).value = "";
+            document.getElementById(`${category.toLowerCase().replace(" ", "-")}-feedback`).textContent = "";
+        }
+
+        function validateAnswer(category) {
+            const question = questions[category][currentIndex[category]];
+            const userAnswer = document.getElementById(`${category.toLowerCase().replace(" ", "-")}-answer`).value.trim().toLowerCase();
+            const correctAnswer = question.en.toLowerCase();
+            const feedbackElement = document.getElementById(`${category.toLowerCase().replace(" ", "-")}-feedback`);
+
+            if (userAnswer === correctAnswer) {
+                feedbackElement.textContent = "Correct! 🎉";
+                feedbackElement.style.color = "green";
+            } else {
+                feedbackElement.textContent = `Incorrect! The correct answer is: "${question.en}".`;
+                feedbackElement.style.color = "red";
+            }
+
+            setTimeout(() => {
+                currentIndex[category]++;
+                if (currentIndex[category] >= questions[category].length) {
+                    feedbackElement.textContent = "You have completed this category!";
+                    return;
+                }
+                showQuestion(category);
+            }, 2000);
+        }
+
+        // Initialize the questions
+        showQuestion("Present Simple");
+        showQuestion("Present Continuous");
+        showQuestion("Past Simple");
+    </script>
+</body>
+</html>
